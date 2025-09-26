@@ -1,29 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+
+<html lang="pt-BR"> 
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SemaFlow - Login</title>
-</head>
+    <meta charset="UTF-8" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- responsivo em dispositivos móveis -->
+    <title>SemaFlow - Login</title> 
+
 <body>
-    <div class="login-container">
+    <div class="login-container"> <!-- Container principal que agrupa os elementos da tela de login -->
 
         <h1 class="title">SemaFlow</h1>
-        <img src="./imagem.png" alt="Logo" class="logo">
-        <h1 class="subtitle">Login</h1>
 
-        <form id="loginForm">
-            <input type="text" id="email" placeholder="Email/Telefone" required>
-            <input type="password" id="senha" placeholder="Senha" required>
-            <button type="submit" class="btn">Entrar</button>
+        <form id="loginForm"> <!-- usuário insere email e senha -->
+            <input type="text" id="email" placeholder="Email/Telefone" required> <!-- email ou telefone -->
+            <input type="password" id="senha" placeholder="Senha" required> <!-- senha -->
+            <button type="submit" class="btn">Entrar</button> <!-- Botão para enviar o formulário -->
         </form>
 
-        <div class="links">
-            <a href="adicionais/redefinir.html" id="linkEsqueceu">Esqueceu sua senha?</a>
-            <a href="#" id="linkCadastro">Não possui conta</a>
-            <a href="adicionais/ajuda.html" id="linkAjuda">Central de Ajuda</a>
-        </div> 
-        
-    <script src="login/login.js"></script>
+        <script src="login/login.js"></script> <!-- Importa o JavaScript que faz o login funcionar -->
 </body>
-</html>

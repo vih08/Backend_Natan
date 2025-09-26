@@ -1,4 +1,4 @@
-const form = document.getElementById("cadastroForm");
+const form = document.getElementById("cadastroForm"); // Seleciona o formulário de cadastro
 
 form.addEventListener("submit", function (e) {
     e.preventDefault();

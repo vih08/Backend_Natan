@@ -1,8 +1,8 @@
-const map = L.map('map').setView([-23.5505, -46.6333], 6);
+const map = L.map('map').setView([-23.5505, -46.6333], 6); // Cria o mapa centralizado em São Paulo
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-}).addTo(map);
+}).addTo(map); // Adiciona camada de mapa do OpenStreetMap
 
 let rota;
 let mostrarSemaforos = false;
@@ -16,15 +16,17 @@ const criarIconeSemaforo = (estado) => {
     return L.divIcon({
         className: "custom-icon",
         html: `<div style="background:${cor}; width:14px; height:14px; border-radius:50%; border:2px solid #fff;"></div>`
-    });
+    }); // Cria ícone colorido para o semáforo
 };
 
 const atualizarSemaforos = () => {
     semaforos.forEach((s, i) => {
+        // Alterna o estado do semáforo em ciclo
         if (s.estado === "verde") semaforos[i].estado = "amarelo";
         else if (s.estado === "amarelo") semaforos[i].estado = "vermelho";
         else semaforos[i].estado = "verde";
 
+        // Atualiza ícone e popup
         if (semaforosMarkers[i]) {
             semaforosMarkers[i].setIcon(criarIconeSemaforo(semaforos[i].estado));
             semaforosMarkers[i].bindPopup(`<strong>Semáforo</strong><br>Status: ${semaforos[i].estado}`);
@@ -34,14 +36,15 @@ const atualizarSemaforos = () => {
     atualizarPainel();
     recalcularRota();
 };
-setInterval(atualizarSemaforos, 6000); // 6 segundos para mudar a cor so para testar
+setInterval(atualizarSemaforos, 6000); // Muda a cor dos semáforos a cada 6 segundos
 
 const gerarSemaforos = (waypoints) => {
     semaforos = [];
     semaforosMarkers.forEach(m => map.removeLayer(m));
     semaforosMarkers = [];
 
-    for (let i = 0; i < waypoints.length; i += 60 ) { // a cada 60km aparece 1
+    for (let i = 0; i < waypoints.length; i += 60 ) {
+        // Gera semáforo a cada 60km com cor aleatória
         const estadoInicial = ["verde", "amarelo", "vermelho"][Math.floor(Math.random() * 3)];
         semaforos.push({
             coords: [waypoints[i].latLng.lat, waypoints[i].latLng.lng],
@@ -54,6 +57,7 @@ const gerarSemaforos = (waypoints) => {
 const atualizarPainel = () => {
     listaSemaforos.innerHTML = "";
     semaforos.forEach((s, i) => {
+        // Atualiza lista lateral com estado dos semáforos
         const cor = s.estado === "verde" ? "🟢" : s.estado === "amarelo" ? "🟡" : "🔴";
         const item = document.createElement("li");
         item.textContent = `${cor} Semáforo ${i + 1} → ${s.estado.toUpperCase()}`;
@@ -65,6 +69,7 @@ document.getElementById('toggleSemaforos').addEventListener('click', () => {
     mostrarSemaforos = !mostrarSemaforos;
 
     if (mostrarSemaforos) {
+        // Mostra os semáforos no mapa
         semaforosMarkers = semaforos.map(s => {
             const marker = L.marker(s.coords, { icon: criarIconeSemaforo(s.estado) })
                 .addTo(map)
@@ -74,6 +79,7 @@ document.getElementById('toggleSemaforos').addEventListener('click', () => {
         document.getElementById('toggleSemaforos').innerText = "Ocultar Semáforos";
         painel.style.display = "block";
     } else {
+        // Remove os semáforos do mapa
         semaforosMarkers.forEach(m => map.removeLayer(m));
         document.getElementById('toggleSemaforos').innerText = "Mostrar Semáforos";
         painel.style.display = "none";
@@ -81,6 +87,7 @@ document.getElementById('toggleSemaforos').addEventListener('click', () => {
 });
 
 const geocode = async (query) => {
+    // Busca coordenadas a partir de endereço
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
     const res = await fetch(url);
     const data = await res.json();
@@ -90,6 +97,7 @@ const geocode = async (query) => {
 const recalcularRota = () => {
     if (!rota) return;
 
+    // Recalcula rota com base nos pontos atuais
     const start = rota.getWaypoints()[0].latLng;
     const end = rota.getWaypoints()[1].latLng;
 
@@ -103,6 +111,7 @@ const recalcularRota = () => {
 };
 
 document.getElementById('routeBtn').addEventListener('click', async () => {
+    // Gera rota entre dois pontos digitados
     const start = document.getElementById('start').value.trim();
     const end = document.getElementById('end').value.trim();
 
@@ -131,6 +140,7 @@ document.getElementById('routeBtn').addEventListener('click', async () => {
     }).addTo(map);
 
     rota.on('routesfound', (e) => {
+        // Após encontrar rota, gera semáforos ao longo do caminho
         const waypoints = e.routes[0].coordinates.map(coord => ({
             latLng: L.latLng(coord.lat, coord.lng)
         }));
